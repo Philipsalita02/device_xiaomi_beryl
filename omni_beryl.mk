@@ -17,13 +17,19 @@ $(call inherit-product, device/xiaomi/beryl/device.mk)
 
 PRODUCT_DEVICE := beryl
 PRODUCT_NAME := omni_beryl
-PRODUCT_BRAND := Redmi
-PRODUCT_MODEL := beryl
+PRODUCT_BRAND := POCO
+PRODUCT_MODEL := POCO M7 Pro 5G
 PRODUCT_MANUFACTURER := xiaomi
+PRODUCT_PLATFORM := mt6855
+PRODUCT_USE_DYNAMIC_PARTITIONS := true
+# Virtual A/B
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
+
+
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
 PRODUCT_BUILD_PROP_OVERRIDES += \
-    PRIVATE_BUILD_DESC="beryl-user 12 SP1A.210812.016 OS2.0.3.0.VOQINXM release-keys"
+    PRIVATE_BUILD_DESC="beryl-user 16 BP2A.250605.031.A3 OS3.0.4.0.WOQINXM release-keys"
 
-BUILD_FINGERPRINT := Redmi/beryl/beryl:12/SP1A.210812.016/OS2.0.3.0.VOQINXM:user/release-keys
+BUILD_FINGERPRINT := POCO/beryl_in/beryl:16/BP2A.250605.031.A3/OS3.0.4.0.WOQINXM:user/release-keys
