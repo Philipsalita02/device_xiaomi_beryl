@@ -22,9 +22,6 @@ PRODUCT_MODEL := POCO M7 Pro 5G
 PRODUCT_MANUFACTURER := xiaomi
 PRODUCT_PLATFORM := mt6855
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
-# Virtual A/B
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
-
 
 
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
