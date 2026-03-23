@@ -22,11 +22,11 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     bootctrl.mt6855
 
-PRODUCT_STATIC_BOOT_CONTROL_HAL := \
-    bootctrl.mt6855 \
-    libgptutils \
-    libz \
-    libcutils
+PRODUCT_PACKAGES += \
+    android.hardware.boot@1.2-impl \
+    android.hardware.boot@1.2-impl.recovery \
+    android.hardware.boot@1.2-service \
+    bootctrl.mt6855
 
 PRODUCT_PACKAGES += \
     otapreopt_script \
