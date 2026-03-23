@@ -66,7 +66,6 @@ TARGET_KERNEL_SOURCE := kernel/xiaomi/beryl
 
 # Kernel - prebuilt
 TARGET_FORCE_PREBUILT_KERNEL := false
-TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 262144 # (BOARD_KERNEL_PAGESIZE * 64)
