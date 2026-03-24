@@ -23,7 +23,6 @@ AB_OTA_PARTITIONS += \
     vbmeta_system \
     product
 BOARD_USES_RECOVERY_AS_BOOT := false
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 
 # Architecture
@@ -84,7 +83,6 @@ BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system system system_ext system_ext vendor vendor product product mi_ext mi_ext vendor_dlkm vendor_dlkm odm_dlkm odm_dlkm
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9122611200 # TODO: Fix hardcoded value
 
-BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
