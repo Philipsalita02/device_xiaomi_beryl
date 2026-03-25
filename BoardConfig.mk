@@ -24,6 +24,16 @@ AB_OTA_PARTITIONS += \
     product
 BOARD_USES_RECOVERY_AS_BOOT := false
 
+# MY_CHANGES_1
+# ===== ADD TO END OF BoardConfig.mk =====
+TW_EXCLUDE_APEX := true                    # Saves ~1.5 MB
+TW_NO_LANGUAGES := "en"                    # Saves ~2-3 MB (keep only English)
+TWRP_INCLUDE_LOGCAT := false               # Saves ~400 KB
+BOARD_RAMDISK_USE_LZ4 := true              # Compresses ramdisk ~10-15%
+# =========================================
+
+
+
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
