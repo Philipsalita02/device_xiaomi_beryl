@@ -5,27 +5,37 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-# Inherit from those products. Most specific first.
+# 64-bit base (required for arm64 TWRP)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+
+# Telephony base (needed for SIM/MTP in recovery)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-# Inherit some common Omni stuff.
+# TWRP-minimal product base
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-# Inherit from beryl device
+# Device-specific configuration
 $(call inherit-product, device/xiaomi/beryl/device.mk)
 
-PRODUCT_DEVICE := beryl
-PRODUCT_NAME := omni_beryl
-PRODUCT_BRAND := POCO
-PRODUCT_MODEL := POCO M7 Pro 5G
+# ─────────────────────────────────────────────
+# Product identity
+# ─────────────────────────────────────────────
+PRODUCT_DEVICE       := beryl
+PRODUCT_NAME         := omni_beryl
+PRODUCT_BRAND        := POCO
+PRODUCT_MODEL        := POCO M7 Pro 5G
 PRODUCT_MANUFACTURER := xiaomi
-PRODUCT_PLATFORM := mt6855
+PRODUCT_PLATFORM     := mt6855
+
+# Dynamic partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
-
+# Google client ID base (Xiaomi)
 PRODUCT_GMS_CLIENTID_BASE := android-xiaomi
 
+# ─────────────────────────────────────────────
+# Build fingerprint  (HyperOS 3.0.4.0 / Android 16)
+# ─────────────────────────────────────────────
 PRODUCT_BUILD_PROP_OVERRIDES += \
     PRIVATE_BUILD_DESC="beryl-user 16 BP2A.250605.031.A3 OS3.0.4.0.WOQINXM release-keys"
 
