@@ -138,8 +138,6 @@ TARGET_RECOVERY_FSTAB         := $(DEVICE_PATH)/recovery.fstab   # was missing
 #   Setting it explicitly here (alongside BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE)
 #   pre-satisfies the guard and eliminates the dumpvars failure.
 # ─────────────────────────────────────────────
-BUILDING_VENDOR_BOOT_IMAGE            := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # ─────────────────────────────────────────────
 # Security / Anti-rollback hack
