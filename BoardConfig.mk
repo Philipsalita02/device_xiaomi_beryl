@@ -31,10 +31,6 @@ TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a55
 # APEX
 # ─────────────────────────────────────────────
 OVERRIDE_TARGET_FLATTEN_APEX := true
-# NOTE: BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT has been moved to
-# the '# Vendor Boot' section below — it MUST live with its dependency
-# (BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE) and the explicit
-# BUILDING_VENDOR_BOOT_IMAGE guard required by board_config.mk:902.
 
 # ─────────────────────────────────────────────
 # A/B (Virtual-A/B OTA)
@@ -68,42 +64,46 @@ TARGET_SCREEN_DENSITY := 450
 # Kernel  (GKI / Header v4 — prebuilt)
 # ─────────────────────────────────────────────
 BOARD_BOOTIMG_HEADER_VERSION := 4
-BOARD_KERNEL_BASE        := 0x3fff8000
-BOARD_KERNEL_PAGESIZE    := 4096
-BOARD_RAMDISK_OFFSET     := 0x26f08000
-BOARD_KERNEL_TAGS_OFFSET := 0x07c88000
-BOARD_KERNEL_VENDOR_CMDLINE := bootopt=64S3,32N2,64N2
+BOARD_KERNEL_BASE            := 0x3fff8000
+BOARD_KERNEL_PAGESIZE        := 4096
+
+# FIX #1 — Corrected ramdisk offset
+# Old value 0x26f08000 produced ramdisk_addr = 0x66F00000 (wrong)
+# 0x3fff8000 + 0x04008000 = 0x44000000 (correct for MT6855/beryl)
+BOARD_RAMDISK_OFFSET         := 0x04008000
+
+BOARD_KERNEL_TAGS_OFFSET     := 0x07c88000
+BOARD_KERNEL_VENDOR_CMDLINE  := bootopt=64S3,32N2,64N2
 
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 
-BOARD_KERNEL_IMAGE_NAME   := Image
+BOARD_KERNEL_IMAGE_NAME      := Image
 BOARD_INCLUDE_DTB_IN_BOOTIMG :=
-BOARD_KERNEL_SEPARATED_DTBO  := false   # GKI — no DTBO partition
+BOARD_KERNEL_SEPARATED_DTBO  := false
 
 TARGET_PREBUILT_DTB    := $(DEVICE_PATH)/prebuilt/dtb.img
 TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 
-# Tell the build system to skip kernel compilation and use the prebuilt
 TARGET_FORCE_PREBUILT_KERNEL := true
-TARGET_KERNEL_CONFIG  := beryl_defconfig
-TARGET_KERNEL_SOURCE  := kernel/xiaomi/beryl
+TARGET_KERNEL_CONFIG         := beryl_defconfig
+TARGET_KERNEL_SOURCE         := kernel/xiaomi/beryl
 
 # ─────────────────────────────────────────────
 # Partitions
 # ─────────────────────────────────────────────
-BOARD_FLASH_BLOCK_SIZE               := 262144
-BOARD_BOOTIMAGE_PARTITION_SIZE       := 67108864
-BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
-BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864   # canonical AOSP variable
+BOARD_FLASH_BLOCK_SIZE                := 262144
+BOARD_BOOTIMAGE_PARTITION_SIZE        := 67108864
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE  := 8388608
+BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 
-BOARD_HAS_LARGE_FILESYSTEM := true
-BOARD_SYSTEMIMAGE_PARTITION_TYPE     := erofs
-BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE   := erofs
-BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
-TARGET_COPY_OUT_VENDOR := vendor
+BOARD_HAS_LARGE_FILESYSTEM            := true
+BOARD_SYSTEMIMAGE_PARTITION_TYPE      := erofs
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE    := erofs
+BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE  := f2fs
+TARGET_COPY_OUT_VENDOR                := vendor
 
 BOARD_SUPER_PARTITION_SIZE   := 9126805504
 BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
@@ -115,32 +115,31 @@ BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9122611200
 # Platform
 # ─────────────────────────────────────────────
 TARGET_BOARD_PLATFORM := mt6855
-# BOARD_VENDOR_BOOT_IMAGE_PARTITION_SIZE (the misspelled duplicate) has been
-# removed — only BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE (above) is correct.
 
 # ─────────────────────────────────────────────
 # Recovery
 # ─────────────────────────────────────────────
-TARGET_RECOVERY_PIXEL_FORMAT  := BGRA_8888
-TARGET_USERIMAGES_USE_EXT4    := true
-TARGET_USERIMAGES_USE_F2FS    := true
-TARGET_RECOVERY_FSTAB         := $(DEVICE_PATH)/recovery.fstab   # was missing
+TARGET_RECOVERY_PIXEL_FORMAT := BGRA_8888
+TARGET_USERIMAGES_USE_EXT4   := true
+TARGET_USERIMAGES_USE_F2FS   := true
+TARGET_RECOVERY_FSTAB        := $(DEVICE_PATH)/recovery.fstab
 
 # ─────────────────────────────────────────────
-# Vendor Boot  ← CRITICAL SECTION
-#
-# BUG-FIX: TWRP's build/make/core/board_config.mk:902 gates
-#   BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT on
-#   (BUILDING_VENDOR_BOOT_IMAGE == true).
-#   BUILDING_VENDOR_BOOT_IMAGE is normally derived inside
-#   build/make/core/Makefile which is parsed AFTER board_config.mk,
-#   so it is always empty when the :902 check fires.
-#   Setting it explicitly here (alongside BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE)
-#   pre-satisfies the guard and eliminates the dumpvars failure.
+# Vendor Boot
+# FIX #2 — These were described in comments but never actually set.
+# Without them TWRP recovery resources never land in vendor_boot.
 # ─────────────────────────────────────────────
+BUILDING_VENDOR_BOOT_IMAGE                   := true
+BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+
+# FIX #3 — Force LZ4 frame format (no 8 MB block cap)
+# LZ4 legacy hard-caps each block at 8 MB decompressed.
+# TWRP ramdisk expands to ~14 MB → silent CPIO truncation → bootloop.
+# LZ4 frame format has no such limit.
+BOARD_RAMDISK_USE_LZ4 := true
 
 # ─────────────────────────────────────────────
-# Security / Anti-rollback hack
+# Security / Anti-rollback
 # ─────────────────────────────────────────────
 VENDOR_SECURITY_PATCH   := 2099-12-31
 PLATFORM_SECURITY_PATCH := 2099-12-31
@@ -163,27 +162,28 @@ BOARD_USES_METADATA_PARTITION := true
 # ─────────────────────────────────────────────
 # TWRP Configuration
 # ─────────────────────────────────────────────
-TW_THEME                   := portrait_hdpi
-TW_EXTRA_LANGUAGES         := true
-TW_SCREEN_BLANK_ON_BOOT    := true
-TW_NO_SCREEN_BLANK         := true
-TW_INPUT_BLACKLIST         := "hbtp_vm"
-TW_USE_TOOLBOX             := true
-TW_INCLUDE_REPACKTOOLS     := true
-TW_INCLUDE_RESETPROP       := true
-TW_INCLUDE_NTFS_3G         := true
-TW_INCLUDE_FUSE_EXFAT      := true
-TW_INCLUDE_FUSE_NTFS       := true
-RECOVERY_SDCARD_ON_DATA    := true
-TW_HAS_MTP                 := true
-TW_MTP_DEVICE              := /dev/mtp_usb
+TW_THEME                := portrait_hdpi
+TW_EXTRA_LANGUAGES      := true
+TW_INPUT_BLACKLIST      := "hbtp_vm"
+TW_USE_TOOLBOX          := true
+TW_INCLUDE_REPACKTOOLS  := true
+TW_INCLUDE_RESETPROP    := true
+TW_INCLUDE_NTFS_3G      := true
+TW_INCLUDE_FUSE_EXFAT   := true
+TW_INCLUDE_FUSE_NTFS    := true
+RECOVERY_SDCARD_ON_DATA := true
+TW_HAS_MTP              := true
+TW_MTP_DEVICE           := /dev/mtp_usb
 
-TW_BRIGHTNESS_PATH         := "/sys/class/leds/lcd-backlight/brightness"
-TW_MAX_BRIGHTNESS          := 2047
-TW_DEFAULT_BRIGHTNESS      := 1200
+TW_BRIGHTNESS_PATH    := "/sys/class/leds/lcd-backlight/brightness"
+TW_MAX_BRIGHTNESS     := 2047
+TW_DEFAULT_BRIGHTNESS := 1200
 
-TW_DEVICE_VERSION          := 1
-TW_BACKUP_EXCLUSIONS       := /data/fonts
-TW_EXCLUDE_DEFAULT_USB_INIT := true
-TW_FASTBOOT_MODE           := true
+TW_DEVICE_VERSION             := 2
+TW_BACKUP_EXCLUSIONS          := /data/fonts
+TW_EXCLUDE_DEFAULT_USB_INIT   := true
+TW_FASTBOOT_MODE              := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
+
+# FIX #4 — Removed TW_SCREEN_BLANK_ON_BOOT (was contradicting TW_NO_SCREEN_BLANK)
+TW_NO_SCREEN_BLANK := true
