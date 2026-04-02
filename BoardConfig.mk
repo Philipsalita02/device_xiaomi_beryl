@@ -129,7 +129,6 @@ TARGET_RECOVERY_FSTAB        := $(DEVICE_PATH)/recovery.fstab
 # FIX #2 — These were described in comments but never actually set.
 # Without them TWRP recovery resources never land in vendor_boot.
 # ─────────────────────────────────────────────
-BUILDING_VENDOR_BOOT_IMAGE                   := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
 
 # FIX #3 — Force LZ4 frame format (no 8 MB block cap)
