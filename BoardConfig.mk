@@ -41,7 +41,7 @@ AB_OTA_PARTITIONS += \
     odm_dlkm \
     vbmeta_system \
     vbmeta_vendor
-BOARD_USES_RECOVERY_AS_BOOT := false
+BOARD_USES_RECOVERY_AS_BOOT := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := beryl
