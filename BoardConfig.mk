@@ -33,6 +33,7 @@ AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS += \
     boot \
     init_boot \
+    vendor_boot \
     system \
     system_ext \
     vendor \
@@ -54,7 +55,6 @@ TARGET_SCREEN_DENSITY := 450
 BOARD_BOOTIMG_HEADER_VERSION := 4
 BOARD_KERNEL_BASE            := 0x3fff8000
 BOARD_KERNEL_PAGESIZE        := 4096
-# FIX 1: Correct ramdisk offset → produces ramdisk_addr=0x44000000
 BOARD_RAMDISK_OFFSET         := 0x04008000
 BOARD_KERNEL_TAGS_OFFSET     := 0x07c88000
 BOARD_KERNEL_VENDOR_CMDLINE  := bootopt=64S3,32N2,64N2
@@ -103,11 +103,8 @@ TARGET_USERIMAGES_USE_F2FS   := true
 TARGET_RECOVERY_FSTAB        := $(DEVICE_PATH)/recovery.fstab
 
 # Vendor Boot
-# NOTE: BUILDING_VENDOR_BOOT_IMAGE is readonly in build system
-# DO NOT set it here - set via YAML shell export instead
+# BUILDING_VENDOR_BOOT_IMAGE is readonly - set via YAML shell export only
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
-
-# FIX 3: LZ4 frame format - prevents 8MB block cap truncation
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Security / Anti-rollback
@@ -148,5 +145,4 @@ TW_BACKUP_EXCLUSIONS          := /data/fonts
 TW_EXCLUDE_DEFAULT_USB_INIT   := true
 TW_FASTBOOT_MODE              := true
 TW_SUPPORT_INPUT_AIDL_HAPTICS := true
-# FIX 4: Removed TW_SCREEN_BLANK_ON_BOOT (contradicted TW_NO_SCREEN_BLANK)
 TW_NO_SCREEN_BLANK            := true
