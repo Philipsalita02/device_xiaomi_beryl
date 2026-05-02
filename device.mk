@@ -47,3 +47,12 @@ PRODUCT_PACKAGES += \
 # ─────────────────────────────────────────────
 PRODUCT_PACKAGES += \
     fastbootd
+
+#
+# for tzdata
+PRODUCT_PACKAGES += \
+    tzdata_twrp
+
+# Keystore
+PRODUCT_PACKAGES += \
+    android.system.keystore2
