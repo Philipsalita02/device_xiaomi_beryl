@@ -1,1 +1,4 @@
-# intentionally empty
+export FOX_BUILD_DEVICE=beryl
+export FOX_VIRTUAL_AB_DEVICE=1
+export FOX_AB_DEVICE=1
+export ALLOW_MISSING_DEPENDENCIES=true
