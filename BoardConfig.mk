@@ -105,6 +105,7 @@ TARGET_RECOVERY_FSTAB        := $(DEVICE_PATH)/recovery.fstab
 # Vendor Boot
 # BUILDING_VENDOR_BOOT_IMAGE is readonly - set via YAML shell export only
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
+BOARD_INCLUDE_RECOVERY_RAMDISK_IN_VENDOR_BOOT := true
 BOARD_RAMDISK_USE_LZ4 := true
 
 # Security / Anti-rollback
