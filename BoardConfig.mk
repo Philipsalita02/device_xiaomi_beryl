@@ -103,7 +103,6 @@ TARGET_USERIMAGES_USE_F2FS   := true
 TARGET_RECOVERY_FSTAB        := $(DEVICE_PATH)/recovery.fstab
 
 # Vendor Boot
-# BUILDING_VENDOR_BOOT_IMAGE is readonly - set via YAML shell export only
 
 
 BOARD_RAMDISK_USE_LZ4 := true
@@ -163,4 +162,3 @@ OF_STATUS_INDENT_RIGHT := 48
 OF_CLOCK_POS := 1
 # Explicitly enable vendor_boot image building
 BOARD_USES_VENDOR_BOOTIMAGE := true
-BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := true
