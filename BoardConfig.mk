@@ -160,3 +160,5 @@ OF_STATUS_H := 100
 OF_STATUS_INDENT_LEFT := 48
 OF_STATUS_INDENT_RIGHT := 48
 OF_CLOCK_POS := 1
+# Explicitly enable vendor_boot image building
+BOARD_USES_VENDOR_BOOTIMAGE := true
