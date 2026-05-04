@@ -56,3 +56,7 @@ PRODUCT_PACKAGES += \
 # Keystore
 PRODUCT_PACKAGES += \
     android.system.keystore2
+
+# Touch firmware
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/touchscreen/fts_touch_i2c.ko:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/lib/modules/fts_touch_i2c.ko
